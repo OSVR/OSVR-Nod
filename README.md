@@ -13,6 +13,4 @@ Then, just put the `.dll` file from this plugin in the same directory of your OS
 
 
 ## Licenses
-This plugin: Licensed under the Apache License, Version 2.0.
-
-Note that since this builds with OpenSpatialServiceController, which uses Windows libraries, you are responsible for complying with the terms of the corresponding licenses.
+This plugin: Licensed under the Apache License, Version 2.0. See accompanying License file for details.

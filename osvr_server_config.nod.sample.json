@@ -1,0 +1,16 @@
+{
+    "plugins": [
+        "com_osvr_Nod"
+    ],
+    "routes": [
+        {
+            "destination": "/me/hands",
+            "source": {
+                "child": {
+                    "tracker": "/com_osvr_Nod/Nod",
+                    "sensor": 0
+                }
+            }
+        }
+    ]
+}

@@ -52,6 +52,9 @@ class NodDevice : public OpenSpatialDelegate {
         OSVR_DeviceInitOptions opts = osvrDeviceCreateInitOptions(ctx);
 
         osvrDeviceGestureConfigure(opts, &m_gesture);
+        // @todo if you will be using more interfaces,
+        // you'll need to configure them as well such
+        // as above
 
         /// Create the sync device token with the options
         m_dev.initSync(ctx, "Nod", opts);
@@ -60,6 +63,8 @@ class NodDevice : public OpenSpatialDelegate {
         initializeGestureMap();
 
         /// Send JSON descriptor
+        // @todo you will need to update json descriptor
+        // if you will be using button/tracker interfaces
         m_dev.sendJsonDescriptor(com_osvr_Nod_json);
 
         /// Register update callback
@@ -129,6 +134,11 @@ class NodDevice : public OpenSpatialDelegate {
   private:
     osvr::pluginkit::DeviceToken m_dev;
     OSVR_GestureDeviceInterface m_gesture;
+    // @todo add more interface variable like gesture one above
+    // if you will be using those interfaces
+    // OSVR_TrackerDeviceInterface m_tracker;
+    // OSVR_ButtonDeviceInterface m_button;
+
     // map for Nod's gesture ID to OSVR gesture ID
     std::map<int, OSVR_GestureID> m_gestureMap;
 };

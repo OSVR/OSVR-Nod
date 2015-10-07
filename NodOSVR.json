@@ -1,0 +1,68 @@
+{
+  "deviceVendor": "Nod",
+  "deviceName": "Backspin",
+  "author": "Khwaab Dave <khwaab@nod-labs.com>",
+  "version": 1,
+  "lastModified": "",
+  "interfaces": {
+    "analog": {
+      "count": 3,
+      "traits": [
+        {
+          "min": 0,
+          "max": 255,
+          "rest": 255
+        },
+		{
+			"min":0,
+			"max":255,
+			"rest":128
+		},
+		{
+			"min":0,
+			"max":255,
+			"rest":128
+		}
+      ]
+    },
+    "button": {
+      "count": 10,
+      "traits": [
+        {
+          "max": 1,
+          "min": 0,
+          "rest": 0
+        }
+      ]
+    },
+    "tracker": {
+      "bounded": true,
+      "count": 1,
+      "orientation": true,
+      "position": false
+    }
+  },
+  "semantic": {
+    "control": {
+      "a": "button/0",
+      "b": "button/1",
+      "x": "button/2",
+      "y": "button/3",
+      "start": "button/4",
+      "bumper": "button/5",
+      "joystick": {
+        "x": "analog/1",
+        "y": "analog/2",
+        "button": "button/6"
+      },
+      "trigger": "analog/0"
+    },
+    "track": {
+      "hands/right" : "tracker"
+    }
+  },
+  "automaticAliases": {
+    "/controller": "semantic/control",
+    "/me" :  "semantic/track"
+  }
+}

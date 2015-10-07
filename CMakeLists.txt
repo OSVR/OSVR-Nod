@@ -1,10 +1,5 @@
-#
-# Nod plugin for OSVR
-#
 cmake_minimum_required(VERSION 2.8.12)
-project(com_osvr_Nod)
-
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+project(NodOSVRPlugin) # Change this line.
 
 # This looks for an osvrConfig.cmake file - most of the time it can be
 # autodetected but you might need to create/extend CMAKE_PREFIX_PATH to include something like
@@ -13,28 +8,27 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # in the CMake GUI or command line.
 find_package(osvr REQUIRED)
 
-# Generate our JSON header file
-osvr_convert_json(com_osvr_Nod_json
-    com_osvr_Nod.json
-    "${CMAKE_CURRENT_BINARY_DIR}/com_osvr_Nod_json.h")
-
+# This generates a header file, from the named json file, containing a string literal
+# named com_osvr_example_selfcontained_json (not null terminated)
+# The file must be added as a source file to some target (as below) to be generated.
+MESSAGE("converting")
+osvr_convert_json(NodOSVR
+    NodOSVR.json
+    "${CMAKE_CURRENT_BINARY_DIR}/NodOSVR.h")
 # Be able to find our generated header file.
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-# Build and install the plugin
-osvr_add_plugin(com_osvr_Nod
-    com_osvr_Nod.cpp
-    OpenSpatialServiceController.h
-    OpenSpatialServiceController.cpp
-    "${CMAKE_CURRENT_BINARY_DIR}/com_osvr_Nod_json.h")
+# This is just a helper function wrapping CMake's add_library command that
+# sets up include dirs, libraries, and naming convention (no leading "lib")
+# for an OSVR plugin. It also installs the plugin into the right directory.
+# Pass as many source files as you need. See osvrAddPlugin.cmake for full docs.
+osvr_add_plugin(NAME NodOSVRPlugin
+    CPP # indicates we'd like to use the C++ wrapper
+    SOURCES
+    NodOSVRPlugin.cpp
+    "${CMAKE_CURRENT_BINARY_DIR}/NodOSVR.h"
+	Settings.h
+	NodPlugin.h)
 
-# Link against PluginKit (C++ wrapper)
-target_link_libraries(com_osvr_Nod
-    osvr::osvrPluginKitCpp)
-
-# Install docs, license, sample config
-install(FILES
-    osvr_server_config.nod.sample.json
-    README.md
-    LICENSE
-    DESTINATION .)
+# If you use other libraries, find them and add a line like:
+#target_link_libraries(NodOSVRPlugin )

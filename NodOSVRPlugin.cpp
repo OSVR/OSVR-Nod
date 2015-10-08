@@ -43,6 +43,7 @@
 
 // Global device count for path incrementation
 int deviceCount = 0;
+std::vector<Backspin*> devices;
 
 // Anonymous namespace to avoid symbol collision
 namespace {
@@ -59,6 +60,7 @@ class Backspin {
         osvrDeviceTrackerConfigure(opts, &m_orientation);
         /// Create the device token with the options
         m_dev.initAsync(ctx, std::to_string(deviceCount).c_str(), opts);
+        deviceCount++;
 
         /// Send JSON descriptor
         m_dev.sendJsonDescriptor(NodOSVR);
@@ -106,7 +108,6 @@ class Backspin {
       OSVR_TrackerDeviceInterface m_orientation;
 };
 
-std::vector<Backspin*> devices;
 
 void euler(const float& pitch, const float& roll, const float& yaw, double* mData)
 {
@@ -132,27 +133,30 @@ void OpenSpatialEventFired(NodEvent ev)
     if (ev.type == EventType::ServiceReady)
     {
         std::cout << "[NOD PLUGIN] Service Ready" << std::endl;
-        NodSubscribe(Modality::GameControlMode, "nod2-004008");
-        NodSubscribe(Modality::ButtonMode, "nod2-004008");
-        NodSubscribe(Modality::EulerMode, "nod2-004008");
+        for (int i = 0; i < NodNumRings(); i++)
+        {
+            NodSubscribe(Modality::GameControlMode, NodGetRingName(i));
+            NodSubscribe(Modality::ButtonMode, NodGetRingName(i));
+            NodSubscribe(Modality::EulerMode, NodGetRingName(i));
+        }
     }
     if (ev.type == EventType::AnalogData)
     {
-        Backspin* dev = devices.at(0);
+        Backspin* dev = devices.at(ev.sender);
         dev->m_analogval[0] = ev.trigger;
         dev->m_analogval[1] = ev.x;
         dev->m_analogval[2] = ev.y;
     }
     if (ev.type == EventType::Button)
     {
-        Backspin* dev = devices.at(0);
+        Backspin* dev = devices.at(ev.sender);
         int index = ev.buttonID;
         dev->buttonPressed = true;
         dev->m_buttons[index] = (ev.buttonState == UP) ? 0 : 1;
     }
     if (ev.type == EventType::EulerAngles)
     {
-        Backspin* dev = devices.at(0);
+        Backspin* dev = devices.at(ev.sender);
         double val[4];
         euler(ev.pitch, ev.roll, ev.yaw, val);
         dev->m_orientationval.data[0] = val[0];

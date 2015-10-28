@@ -27,13 +27,6 @@
     },
     "button": {
       "count": 10,
-      "traits": [
-        {
-          "max": 1,
-          "min": 0,
-          "rest": 0
-        }
-      ]
     },
     "tracker": {
       "bounded": true,
@@ -55,14 +48,11 @@
         "y": "analog/2",
         "button": "button/6"
       },
-      "trigger": "analog/0"
-    },
-    "track": {
-      "hands/right" : "tracker"
+      "trigger": "analog/0",
+      "orientation" : "tracker/0"
     }
   },
   "automaticAliases": {
-    "/controller": "semantic/control",
-    "/me" :  "semantic/track"
+    "/controller": "semantic/"
   }
 }

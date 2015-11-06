@@ -101,6 +101,8 @@ public:
     OSVR_AnalogDeviceInterface m_analog;
     OSVR_ButtonDeviceInterface m_button;
     OSVR_TrackerDeviceInterface m_orientation;
+    OSVR_OrientationState lastOrientation;
+    OSVR_PositionState lastPosition;
 };
 
 std::vector<Backspin*> devices;
@@ -116,6 +118,7 @@ void OpenSpatialEventFired(NodEvent ev)
             NodSubscribe(Modality::ButtonMode, NodGetRingName(i));
             NodSubscribe(Modality::EulerMode, NodGetRingName(i));
         }
+        NodSubscribe(Modality::TranslationMode, NodGetRingName(0));
     }
     if (ev.type == EventType::AnalogData)
     {
@@ -140,8 +143,21 @@ void OpenSpatialEventFired(NodEvent ev)
         euler(-ev.roll, -ev.pitch, ev.yaw, &orientationval);
         OSVR_Pose3 pose;
         pose.rotation = orientationval;
-        //TODO: when 6dof is implemented send translations
-        //pose.translation = { 0,0,0 };
+        pose.translation = dev->lastPosition;
+        dev->lastOrientation = orientationval;
+        osvrDeviceTrackerSendPose(dev->m_dev, dev->m_orientation, &pose, 0);
+    }
+    if (ev.type == EventType::Translation)
+    {
+        Backspin* dev = devices.at(0);
+        OSVR_PositionState positionval;
+        positionval.data[0] = -1*ev.xf/1000;
+        positionval.data[1] = ev.yf/1000;
+        positionval.data[2] = -1*ev.zf/1000;
+        OSVR_Pose3 pose;
+        pose.translation = positionval;
+        pose.rotation = dev->lastOrientation;
+        dev->lastPosition = positionval;
         osvrDeviceTrackerSendPose(dev->m_dev, dev->m_orientation, &pose, 0);
     }
 }

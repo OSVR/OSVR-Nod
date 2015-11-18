@@ -41,7 +41,7 @@
 #include <osvr/PluginKit/TrackerInterfaceC.h>
 
 // Generated JSON header file
-#include "NodOSVR.h"
+#include "org_osvr_nod.h"
 #include "NodPlugin.h"
 
 #pragma comment(lib, "OpenSpatialDll.lib")
@@ -95,7 +95,7 @@ public:
         m_dev.initAsync(ctx, std::to_string(deviceNumber).c_str(), opts);
 
         /// Send JSON descriptor
-        m_dev.sendJsonDescriptor(NodOSVR);
+        m_dev.sendJsonDescriptor(org_osvr_nod);
     }
     osvr::pluginkit::DeviceToken m_dev;
     OSVR_AnalogDeviceInterface m_analog;

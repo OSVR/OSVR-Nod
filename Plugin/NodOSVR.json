@@ -13,16 +13,16 @@
           "max": 255,
           "rest": 255
         },
-		{
-			"min":0,
-			"max":255,
-			"rest":128
-		},
-		{
-			"min":0,
-			"max":255,
-			"rest":128
-		}
+        {
+          "min":0,
+          "max":255,
+          "rest":128
+        },
+        {
+          "min":0,
+          "max":255,
+          "rest":128
+        }
       ]
     },
     "button": {
@@ -36,23 +36,31 @@
     }
   },
   "semantic": {
-    "control": {
+    "right": {
       "a": "button/0",
       "b": "button/1",
       "x": "button/2",
       "y": "button/3",
       "start": "button/4",
       "bumper": "button/5",
+      "$target": {
+        "changeBasis": {
+          "x": "x",
+          "y": "z",
+          "z": "-y"
+        },
+        "child": "tracker/0"
+       },
       "joystick": {
         "x": "analog/1",
         "y": "analog/2",
         "button": "button/6"
       },
-      "trigger": "analog/0",
-      "orientation" : "tracker/0"
+      "trigger": "analog/0"
     }
   },
   "automaticAliases": {
-    "/controller": "semantic/"
+    "/me/hands/right": "semantic/right",
+    "/controller/right": "semantic/right/*"
   }
 }

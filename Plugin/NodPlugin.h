@@ -19,6 +19,9 @@
 #endif
 
 #include "Settings.h"
+#include <vector>
+#include <string>
+#include <sstream>
 
 const static int NOD_NONE = -1;
 
@@ -66,6 +69,12 @@ enum GestureType {
     CCW = 5,
 };
 
+enum SliderType {
+    NONE_S = -1,
+    SLIDE_R = 0,
+    SLIDE_L = 1
+};
+
 extern "C" {
 
     struct NodUniqueID
@@ -99,19 +108,32 @@ extern "C" {
         int batteryPercent = NOD_NONE;
         GestureType gesture = NONE_G;
         FirmwareVersion firmwareVersion;
-        int sender = NOD_NONE;
+        const char* sender = "";
+        SliderType slider = NONE_S;
     };
 
+    // Initialize Nod Client with function pointer for all callback events
     NODPLUGIN_API bool NodInitialize(void(*evFiredFn)(NodEvent));
+
+    // Shutdown and cleanup Nod Client
     NODPLUGIN_API bool NodShutdown(void);
+
+    // Refresh the Nod Client to discover new devices
     NODPLUGIN_API bool NodRefresh(void);
+    // Retrieve the number of Devices
+    NODPLUGIN_API int  NodNumDevices(void);
 
-    NODPLUGIN_API int  NodNumRings(void);
-    const NODPLUGIN_API char* NodGetRingName(int ringID);
+    // Return a char array of device names, seperated by a whitespace delimiter
+    // Use NodGetDeviceNames if instead you would like a vector of strings
+    const NODPLUGIN_API char* NodGetDeviceName(int ringID);
 
+    // Subscribe a device to a given mode
     NODPLUGIN_API bool NodSubscribe(Modality mode, const char* deviceName);
+    // Unsubscribe a device from a given mode
     NODPLUGIN_API bool NodUnsubscribe(Modality mode, const char* deviceName);
 
+    // Retrieve information for a device
     NODPLUGIN_API bool NodRequestDeviceInfo(const char* deviceName);
+    // Change Settings of a device
     NODPLUGIN_API bool NodChangeSetting(const char* deviceName, Settings setting, int args[], int numArgs);
-} // end extern C
+} // end extern C+
